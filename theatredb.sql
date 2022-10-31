@@ -8,69 +8,69 @@ create table User (
 	userName VARCHAR(50) NOT NULL,
 	password VARCHAR(50) NOT NULL,
 	DOB date not null,
-    homeAddress varchar(100) not null
+        homeAddress varchar(100) not null
     -- constraint will be added for password based on client requirements
 );
 
 create table Seat(
-	seatID int primary key auto_increment,
+    seatID int primary key auto_increment,
     seatLocation varchar(6),
     constraint location check (seatLocation in ('stalls', 'circle')),
     seatPrice varchar(3)
 );
 
 create table PerformanceType(
-performanceTypeID INT PRIMARY KEY auto_increment,
-performanceTypeName VARCHAR(30)
+	performanceTypeID INT PRIMARY KEY auto_increment,
+	performanceTypeName VARCHAR(30)
 );
 
 create table Ticket(
-	ticketID int primary key auto_increment,
+    ticketID int primary key auto_increment,
     seatID int,
     userID int,
-	performanceTimingID int,
+    performanceTimingID int,
     ticketPrice varchar(3),
-	foreign key (seatID) references Seat(seatID),
+    foreign key (seatID) references Seat(seatID),
     foreign key (userID) references User(userID)
 );
 
 create table Language(
-languageID INT PRIMARY KEY,
-languageOption VARCHAR(30)
+	languageID INT PRIMARY KEY,
+	languageOption VARCHAR(30)
 );
 
 
 
 create table Performance(
 	performanceID int primary key auto_increment,
-    performanceTypeID INT,
-    ticketID int,
-    languageID int,
-    foreign key (performanceTypeID) references PerformanceType(performanceTypeID),
-    foreign key (ticketID) references Ticket(ticketID),
-    foreign key (languageID) references Language(languageID),
-    title varchar(100),
-    description varchar(1000),
-    hasLiveMusic boolean,
-    noOfSeatsAvailable int
+    	performanceTypeID INT,
+    	ticketID int,
+     	languageID int,
+    	foreign key (performanceTypeID) references PerformanceType(performanceTypeID),
+    	foreign key (languageID) references Language(languageID),
+    	title varchar(100),
+    	description varchar(1000),
+    	hasLiveMusic boolean,
+    	noOfSeatsAvailable int
 );
 
 create table SeatPerformance(
-	seatId int,
+    seatId int,
     performanceID int,
-	primary key(seatID, performanceID),
+    primary key(seatID, performanceID),
     foreign key (seatID) references Seat(seatID),
     foreign key (performanceID) references Performance(performanceID)
 );
 
 
 create table PeformanceTiming(
-performanceTimingID INT PRIMARY KEY auto_increment,
-performanceID INT,
-date DATE,
-duration INT,
-time TIME,
-foreign key (performanceID) references performance(performanceID));
+	performanceTimingID INT PRIMARY KEY auto_increment,
+	performanceID INT,
+	date DATE,
+	duration INT,
+	time TIME,
+	foreign key (performanceID) references performance(performanceID)
+);
 
 
 -- procedures
