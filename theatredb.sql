@@ -45,3 +45,23 @@ create table SeatPerformance(
 	foreign key (perfomanceID) references Performance(performanceID)
 );
 
+
+
+-- procedures
+delimiter / 
+create procedure insertUser
+				(in aUName varchar(50), in aPassword varchar(50), in aDOB date, in aAddress varchar(100))
+	begin
+        insert into User (userName, password, DOB, homeAddress) values (aUName, aPassword, aDOB, aAddress);
+	end; 
+/
+
+create procedure login(in aUName varchar(50), in aPassword varchar(50))
+	begin
+		if exists(select ID from User where userName = aUName and password = aPassword) 
+        then 
+			select true;
+        else select false;
+		end if;
+    end;
+/
