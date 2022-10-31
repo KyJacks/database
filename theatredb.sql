@@ -44,7 +44,6 @@ create table Language(
 create table Performance(
 	performanceID int primary key auto_increment,
     	performanceTypeID INT,
-    	ticketID int,
      	languageID int,
     	foreign key (performanceTypeID) references PerformanceType(performanceTypeID),
     	foreign key (languageID) references Language(languageID),
