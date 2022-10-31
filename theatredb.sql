@@ -21,7 +21,8 @@ create table Seat(
 
 create table PerformanceType(
 	performanceTypeID INT PRIMARY KEY auto_increment,
-	performanceTypeName VARCHAR(30)
+	performanceTypeName VARCHAR(30),
+    	constraint typeName check (performanceTypeName in ('opera', 'concert', 'musical', 'theatre'))
 );
 
 create table Ticket(
