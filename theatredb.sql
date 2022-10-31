@@ -4,7 +4,7 @@ use TheatreRoyal;
 
 
 create table User (
-	ID INT PRIMARY KEY auto_increment,
+	userID INT PRIMARY KEY auto_increment,
 	userName VARCHAR(50) NOT NULL,
 	password VARCHAR(50) NOT NULL,
 	DOB date not null,
