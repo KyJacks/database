@@ -62,7 +62,7 @@ create table SeatPerformance(
 );
 
 
-create table PeformanceTiming(
+create table PerformanceTiming(
 	performanceTimingID INT PRIMARY KEY auto_increment,
 	performanceID INT,
 	date DATE,
