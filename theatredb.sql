@@ -29,20 +29,19 @@ create table Seat(
 
 create table Performance(
 	showID int primary key,
-    	foreign key (showTypeID) references ShowType(showTypeID),
+    	foreign key (showTypeID) references performanceType(performanceTypeID),
     	foreign key (ticketID) references Ticket(ticketID),
     	foreign key (languageID) references Language(languageID),
     	title varchar(100),
     	description varchar(1000),
-    	performers varchar(1000),
     	hasLiveMusic boolean,
     	noOfSeatsAvailable int
 );
 
-create table SeatShow(
+create table SeatPerformance(
 	seatID int primary key,
-    	showID int primary key,
+    	performanceID int primary key,
     	foreign key (seatID) references Seat(seatID),
-	foreign key (showID) references Performance(showID)
+	foreign key (perfomanceID) references Performance(performanceID)
 );
 
