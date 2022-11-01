@@ -108,7 +108,7 @@ create procedure insertPerformance(in aPerformanceType int, in aLanguageID int, 
 
 create procedure insertPerformanceTiming(in aPerformanceID int, in aDate date, in aDuration int, in aTime time)
 	begin
-		insert into PerfomanceTiming(performanceID, date, durationInMinutes, time) values (aPerformanceID, aDate, aDuration, aTime);
+		insert into PerformanceTiming(performanceID, date, durationInMinutes, time) values (aPerformanceID, aDate, aDuration, aTime);
 	end;
 /
 
@@ -126,7 +126,7 @@ create procedure login(in aUName varchar(50), in aPassword varchar(50))
 /
 
 -- select information about performances on a specific date
-create procedure getPerfomanceOnDate(in aDate)
+create procedure getPerformanceOnDate(in aDate)
 	begin
 		select title, description, hasLiveMusic, noOfSeatsAvailable, Language.languageOption from Performance, Language, PeformanceTiming where date = aDate;
 	end;
