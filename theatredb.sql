@@ -16,7 +16,7 @@ create table Seat(
     seatID int primary key auto_increment,
     seatLocation varchar(6),
     constraint location check (seatLocation in ('stalls', 'circle')),
-    seatPrice varchar(3)
+    seatPrice decimal(5,2)
 );
 
 create table PerformanceType(
@@ -91,7 +91,7 @@ create procedure insertUser
 /
 
 create procedure insertSeat
-				(in aLocation varchar(6), in aPrice varchar(3))
+				(in aLocation varchar(6), in aPrice decimal(5, 2))
 	begin 
 		insert into Seat(seatLocation, seatPrice) values (aLocation, aPrice);
 	end;
