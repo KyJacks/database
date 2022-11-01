@@ -45,7 +45,7 @@ create table Purchase(
 
 
 create table Language(
-	languageID INT PRIMARY KEY,
+	languageID INT PRIMARY KEY auto_increment,
 	languageOption VARCHAR(30)
 );
 
@@ -64,7 +64,7 @@ create table Performance(
 );
 
 create table SeatPerformance(
-    seatId int,
+    seatId int auto_increment,
     performanceID int,
     primary key(seatID, performanceID),
     foreign key (seatID) references Seat(seatID),
