@@ -102,7 +102,7 @@ create procedure insertLanguage(in aLanguageOption varchar(30))
     end;
 /
     
-create procedure insertPerformance(in aPerformanceType int, in aLanguageID int, in aTitle varchar(100), in description varchar(1000), in hasLiveMusic boolean, in aNoOfSeatsAvailable int)
+create procedure insertPerformance(in aPerformanceTypeID int, in aLanguageID int, in aTitle varchar(100), in description varchar(1000), in hasLiveMusic boolean, in aNoOfSeatsAvailable int)
 	begin
 		insert into Performance(performanceTypeID, languageID, title, description, hasLiveMusic, noOfSeatsAvailable) values (aPerformanceTypeID, aLanguageID, aTitle, aDescription, aHasLiveMusic, aNoOfSeatsAvailable);
 	end;
@@ -114,27 +114,29 @@ create procedure insertPerformanceTiming(in aPerformanceID int, in aDate date, i
 	end;
 /
 
-
-
--- procedure to log user in to account based on valid pswrd and usrnm
-create procedure login(in aUName varchar(50), in aPassword varchar(50))
+create procedure insertTicket(in aSeatLocation varchar(6), in aUserID int, in aPerformanceTimingID int, in aTicketPrice decimal(5, 2))
 	begin
-		if exists(select ID from User where userName = aUName and password = aPassword) 
-        then 
-			select true;
-        else select false;
-		end if;
-    end;
+		insert into Ticket(seatLocation, userID, performanceTimingID, ticketPrice) values (aSeatLocation, aUserID, aPerformanceTimingID, aTicketPrice);
+	end;
 /
 
+
+
+
 -- select information about performances on a specific date
-create procedure getPerformanceOnDate(in aDate)
+create procedure getPerformanceOnDate(in aDate date)
 	begin
-		select title, description, hasLiveMusic, noOfSeatsAvailable, Language.languageOption from Performance, Language, PeformanceTiming where date = aDate;
+		select title, description from Performance, Language, PeformanceTiming where date = aDate;
 	end;
 
 /
 
+-- returns performances that have the search word in the description or title
+create procedure searchForPerformances(in searchWord varchar(100))
+	begin
+		select title, description from Performance where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%");
+	end;
+/
 
 
 delimiter ;
