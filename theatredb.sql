@@ -64,7 +64,7 @@ create table Performance(
 );
 
 create table SeatPerformance(
-    seatId int auto_increment,
+    seatId int,
     performanceID int,
     primary key(seatID, performanceID),
     foreign key (seatID) references Seat(seatID),
