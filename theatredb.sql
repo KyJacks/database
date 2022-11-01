@@ -67,7 +67,7 @@ create table PerformanceTiming(
 	performanceTimingID INT PRIMARY KEY auto_increment,
 	performanceID INT,
 	date DATE,
-	duration INT,
+	durationInMinutes INT,
 	time TIME,
 	foreign key (performanceID) references performance(performanceID)
 );
@@ -108,7 +108,7 @@ create procedure insertPerformance(in aPerformanceType int, in aLanguageID int, 
 
 create procedure insertPerformanceTiming(in aPerformanceID int, in aDate date, in aDuration int, in aTime time)
 	begin
-		insert into PerfomanceTiming(performanceID, date, duration, time) values (aPerformanceID, aDate, aDuration, aTime);
+		insert into PerfomanceTiming(performanceID, date, durationInMinutes, time) values (aPerformanceID, aDate, aDuration, aTime);
 	end;
 /
 
