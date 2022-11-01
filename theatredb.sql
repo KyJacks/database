@@ -37,9 +37,11 @@ create table Ticket(
 create table Purchase(
 	purchaseID int primary key auto_increment,
     ticketID int,
+    userID int, 
     foreign key (ticketID) references Ticket(ticketID),
+    foreign key (userID) references User(userID), 
     orderNo int,
-    quanitity int
+    quantity int
 );
 
 
