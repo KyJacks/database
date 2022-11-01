@@ -30,7 +30,7 @@ create table Ticket(
     seatID int,
     userID int,
     performanceTimingID int,
-    ticketPrice varchar(3),
+    ticketPrice decimal(5, 2),
     foreign key (seatID) references Seat(seatID),
     foreign key (userID) references User(userID)
 );
