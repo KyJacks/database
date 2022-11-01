@@ -186,33 +186,33 @@ Call insertPerformance(4, 1, 'Midsummer Night''s Dream', 'A Midsummer Night''s D
 Call insertPerformance(4, 2, 'Matsukaze', 'Matsukaze is a play of the third category, the woman''s mode, by Kan''ami, revised by Zeami Motokiyo. One of the most highly regarded of Noh plays, it is mentioned more than any other in Zeami''s own writings, and is depicted numerous times in the visual arts.',  false, 200);
 
 
-Call insertPerformanceTiming(1, '2022-11-11', 120, '21:30');
-Call insertPerformanceTiming(1, '2022-11-11', 120, '13:30');
-Call insertPerformanceTiming(2, '2022-11-16', 159, '19:45');
-Call insertPerformanceTiming(3, '2022-11-16', 135, '18:00');
-Call insertPerformanceTiming(4, '2022-11-18', 159, '19:45');
-Call insertPerformanceTiming(5, '2022-11-11', 180, '20:00');
-Call insertPerformanceTiming(5, '2022-11-11', 180, '11:00');
+Call insertPerformanceTiming(1, '2022-11-11', '02:00', '13:00');
+Call insertPerformanceTiming(1, '2022-11-11', '02:00', '19:00');
+Call insertPerformanceTiming(2, '2022-11-16', '01:40', '12:45');
+Call insertPerformanceTiming(3, '2022-11-16', '02:15', '18:00');
+Call insertPerformanceTiming(4, '2022-11-18', '01:00', '20:00');
+Call insertPerformanceTiming(5, '2022-11-11', '02:05', '18:00');
+Call insertPerformanceTiming(5, '2022-11-11', '02:05', '11:00');
 
-Call insertPerformanceTiming(6, '2022-11-14', 140, '16.30');
-Call insertPerformanceTiming(7, '2022-11-25', 180, '11:30');
-Call insertPerformanceTiming(7, '2022-11-25', 180, '17:30');
-Call insertPerformanceTiming(8, '2022-11-26', 200, '19:30');
-Call insertPerformanceTiming(9, '2022-11-26', 130, '11:00');
-Call insertPerformanceTiming(10, '2022-11-30', 100, '14:30');
+Call insertPerformanceTiming(6, '2022-11-14', '02:25', '16.30');
+Call insertPerformanceTiming(7, '2022-11-25', '02:00', '11:30');
+Call insertPerformanceTiming(7, '2022-11-25', '02:00', '17:30');
+Call insertPerformanceTiming(8, '2022-11-26', '02:30', '16:30');
+Call insertPerformanceTiming(9, '2022-11-27', '02:10', '11:00');
+Call insertPerformanceTiming(10, '2022-11-30', '01:40', '14:30');
 
-Call insertPerformanceTiming(11, '2022-12-06', 200, '20:30');
-Call insertPerformanceTiming(11, '2022-12-06', 200, '12:30');
+Call insertPerformanceTiming(11, '2022-12-06', 120, '10:30');
+Call insertPerformanceTiming(11, '2022-12-06', 120, '16:30');
 Call insertPerformanceTiming(12, '2022-12-04', 120, '13:00');
 Call insertPerformanceTiming(13, '2022-12-08', 90, '11:00');
 Call insertPerformanceTiming(13, '2022-12-08', 90, '16:00');
 Call insertPerformanceTiming(14, '2022-12-12', 150, '18:00');
 Call insertPerformanceTiming(15, '2022-12-12', 110, '10:00');
 
-Call insertPerformanceTiming(16, '2022-12-15', 100, '19:00');
 Call insertPerformanceTiming(16, '2022-12-15', 100, '12:00');
+Call insertPerformanceTiming(16, '2022-12-15', 100, '19:00');
 Call insertPerformanceTiming(17, '2022-12-18', 140, '13:00');
-Call insertPerformanceTiming(18, '2022-12-20', 90, '23:00');
+Call insertPerformanceTiming(18, '2022-12-20', 90, '17:00');
 Call insertPerformanceTiming(19, '2022-12-21', 80, '15:00');
-Call insertPerformanceTiming(19, '2022-12-21', 80, '23:00');
-Call insertPerformanceTiming(20, '2022-12-20', 120, '21:30');
+Call insertPerformanceTiming(19, '2022-12-21', 80, '18:45');
+Call insertPerformanceTiming(20, '2022-12-20', 120, '19:00');
