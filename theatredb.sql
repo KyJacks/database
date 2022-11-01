@@ -81,7 +81,7 @@ create table PerformanceTiming(
 	foreign key (performanceID) references performance(performanceID)
 );
 
--- procedures
+-- procedures for inserting data into tables
 delimiter / 
 create procedure insertUser
 				(in aUName varchar(50), in aPassword varchar(50), in aDOB date, in aAddress varchar(100))
@@ -90,6 +90,46 @@ create procedure insertUser
 	end; 
 /
 
+create procedure insertSeat
+				(in aLocation varchar(6), in aPrice varchar(3))
+	begin 
+		insert into Seat(seatLocation, seatPrice) values (aLocation, aPrice);
+	end;
+/
+
+create procedure insertPerformanceType (in aPerformanceTypeName varchar(30))
+	begin
+		insert into PerformanceType(performanceTypeName) values (aPerformanceTypeName);
+	end;
+/
+
+create procedure insertLanguage(in aLanguageOption varchar(30))
+	begin
+		insert into Language(languageOption) values (aLanguageOption);
+    end;
+/
+    
+create procedure insertPerformance(in aPerformanceType int, in aLanguageID int, in aTitle varchar(100), in description varchar(1000), in hasLiveMusic boolean, in aNoOfSeatsAvailable int)
+	begin
+		insert into Performance(performanceTypeID, languageID, title, description, hasLiveMusic, noOfSeatsAvailable) values (aPerformanceTypeID, aLanguageID, aTitle, aDescription, aHasLiveMusic, aNoOfSeatsAvailable);
+	end;
+/
+
+create procedure insertSeatPerformance(in aSeatID int, in aPerformanceID int)
+	begin
+		insert into SeatPerformance(seatID, performanceID) values (aSeatID, aPerformanceID);
+	end;
+/
+
+create procedure insertPerformanceTiming(in aPerformanceID int, in aDate date, in aDuration int, in aTime time)
+	begin
+		insert into PerfomanceTiming(performanceID, date, duration, time) values (aPerformanceID, aDate, aDuration, aTime);
+	end;
+/
+
+
+
+-- procedure to log user in to account based on valid pswrd and usrnm
 create procedure login(in aUName varchar(50), in aPassword varchar(50))
 	begin
 		if exists(select ID from User where userName = aUName and password = aPassword) 
@@ -99,3 +139,15 @@ create procedure login(in aUName varchar(50), in aPassword varchar(50))
 		end if;
     end;
 /
+
+-- select information about performances on a specific date
+create procedure getPerfomanceOnDate(in aDate)
+	begin
+		select title, description, hasLiveMusic, noOfSeatsAvailable, Language.languageOption from Performance, Language, PeformanceTiming where date = aDate;
+	end;
+
+/
+
+
+
+delimiter ;
