@@ -13,8 +13,7 @@ create table User (
 );
 
 create table Seat(
-    seatID int primary key auto_increment,
-    seatLocation varchar(6),
+    seatLocation primary key varchar(6),
     constraint location check (seatLocation in ('stalls', 'circle')),
     seatPrice decimal(5,2)
 );
@@ -27,11 +26,11 @@ create table PerformanceType(
 
 create table Ticket(
     ticketID int primary key auto_increment,
-    seatID int,
+    seatLocation varchar(6),
     userID int,
     performanceTimingID int,
     ticketPrice decimal(5, 2),
-    foreign key (seatID) references Seat(seatID),
+    foreign key (seatLocation) references Seat(seatLocation),
     foreign key (userID) references User(userID)
 );
 
@@ -61,14 +60,6 @@ create table Performance(
     	description varchar(1000),
     	hasLiveMusic boolean,
     	noOfSeatsAvailable int
-);
-
-create table SeatPerformance(
-    seatId int,
-    performanceID int,
-    primary key(seatID, performanceID),
-    foreign key (seatID) references Seat(seatID),
-    foreign key (performanceID) references Performance(performanceID)
 );
 
 
@@ -112,12 +103,6 @@ create procedure insertLanguage(in aLanguageOption varchar(30))
 create procedure insertPerformance(in aPerformanceType int, in aLanguageID int, in aTitle varchar(100), in description varchar(1000), in hasLiveMusic boolean, in aNoOfSeatsAvailable int)
 	begin
 		insert into Performance(performanceTypeID, languageID, title, description, hasLiveMusic, noOfSeatsAvailable) values (aPerformanceTypeID, aLanguageID, aTitle, aDescription, aHasLiveMusic, aNoOfSeatsAvailable);
-	end;
-/
-
-create procedure insertSeatPerformance(in aSeatID int, in aPerformanceID int)
-	begin
-		insert into SeatPerformance(seatID, performanceID) values (aSeatID, aPerformanceID);
 	end;
 /
 
