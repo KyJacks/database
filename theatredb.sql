@@ -8,7 +8,7 @@ create table User (
 	userName VARCHAR(50) NOT NULL,
 	password VARCHAR(50) NOT NULL,
 	DOB date not null,
-        homeAddress varchar(100) not null
+	homeAddress varchar(100) not null
     -- constraint will be added for password based on client requirements
 );
 
@@ -34,6 +34,15 @@ create table Ticket(
     foreign key (seatID) references Seat(seatID),
     foreign key (userID) references User(userID)
 );
+
+create table Purchase(
+	purchaseID int primary key auto_increment,
+    ticketID int,
+    foreign key (ticketID) references Ticket(ticketID),
+    orderNo int,
+    quanitity int
+);
+
 
 create table Language(
 	languageID INT PRIMARY KEY,
@@ -71,7 +80,6 @@ create table PerformanceTiming(
 	time TIME,
 	foreign key (performanceID) references performance(performanceID)
 );
-
 
 -- procedures
 delimiter / 
