@@ -102,7 +102,7 @@ create procedure insertLanguage(in aLanguageOption varchar(30))
     end;
 /
     
-create procedure insertPerformance(in aPerformanceTypeID int, in aLanguageID int, in aTitle varchar(100), in description varchar(1000), in hasLiveMusic boolean, in aNoOfSeatsAvailable int)
+create procedure insertPerformance(in aPerformanceTypeID int, in aLanguageID int, in aTitle varchar(100), in aDescription varchar(1000), in aHasLiveMusic boolean, in aNoOfSeatsAvailable int)
 	begin
 		insert into Performance(performanceTypeID, languageID, title, description, hasLiveMusic, noOfSeatsAvailable) values (aPerformanceTypeID, aLanguageID, aTitle, aDescription, aHasLiveMusic, aNoOfSeatsAvailable);
 	end;
