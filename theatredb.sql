@@ -144,7 +144,7 @@ create procedure searchForPerformances(in searchWord varchar(100), in aFromDate 
         end if;
     end;
 
-
+/
 
 delimiter ;
 
