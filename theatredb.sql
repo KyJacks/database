@@ -126,13 +126,23 @@ create procedure login(in aUName varchar(50), in aPassword varchar(50))
     end;
 /
 
--- select information about performances on a specific date
-create procedure getPerformanceOnDate(in aDate date)
-	begin
-		select title, description, hasLiveMusic, noOfSeatsAvailable, Language.languageOption from Performance, Language, PeformanceTiming where date = aDate;
-	end;
 
-/
+-- search for performance on or between date using search word
+create procedure searchForPerformances(in searchWord varchar(100), in aFromDate date, in aToDate date)
+	begin
+		if aFromDate = null and aToDate = null then
+			select title, description, dateTime, price, durationInMinutes from Performance join PerformanceTiming on 
+				PerformanceTiming.performanceID = Performance.performanceID where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%");
+		elseif aToDate = null then
+			select title, description, dateTime, price, durationInMinutes from Performance join PerformanceTiming on 
+				PerformanceTiming.performanceID = Performance.performanceID where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%")
+				and dateTime = aFromDate order by dateTime asc;
+		else
+			select title, description, dateTime, price, durationInMinutes from Performance join PerformanceTiming on 
+				PerformanceTiming.performanceID = Performance.performanceID where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%")
+				and dateTime between aFromDate and aToDate order by dateTime asc;
+        end if;
+    end;
 
 
 
