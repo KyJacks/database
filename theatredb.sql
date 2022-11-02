@@ -5,15 +5,16 @@ use TheatreRoyal;
 
 create table User (
 	userID INT PRIMARY KEY auto_increment,
-	userName VARCHAR(50) NOT NULL,
+	emailAddress VARCHAR(50) NOT NULL,
 	password VARCHAR(50) NOT NULL,
 	DOB date not null,
-	homeAddress varchar(100) not null
+	homeAddress varchar(100) not null,
+    constraint emailconst check (emailAddress like '%_@__%.__%')
     -- constraint will be added for password based on client requirements
 );
 
 create table Seat(
-    seatLocation primary key varchar(6),
+    seatLocation varchar(6) primary key,
     constraint location check (seatLocation in ('stalls', 'circle')),
     seatPrice decimal(5,2)
 );
@@ -37,9 +38,7 @@ create table Ticket(
 create table Purchase(
 	purchaseID int primary key auto_increment,
     ticketID int,
-    userID int, 
     foreign key (ticketID) references Ticket(ticketID),
-    foreign key (userID) references User(userID), 
     orderNo int,
     quantity int
 );
@@ -69,7 +68,7 @@ create table PerformanceTiming(
 	performanceTimingID INT PRIMARY KEY auto_increment,
 	performanceID INT,
 	date DATE,
-	durationInMinutes INT,
+	durationInMinutes TIME,
 	time TIME,
 	foreign key (performanceID) references performance(performanceID)
 );
@@ -77,9 +76,9 @@ create table PerformanceTiming(
 -- procedures for inserting data into tables
 delimiter / 
 create procedure insertUser
-				(in aUName varchar(50), in aPassword varchar(50), in aDOB date, in aAddress varchar(100))
+				(in aEmailAddress varchar(50), in aPassword varchar(50), in aDOB date, in aAddress varchar(100))
 	begin
-        insert into User (userName, password, DOB, homeAddress) values (aUName, aPassword, aDOB, aAddress);
+        insert into User (emailAddress, password, DOB, homeAddress) values (aEmailAddress, aPassword, aDOB, aAddress);
 	end; 
 /
 
@@ -108,46 +107,42 @@ create procedure insertPerformance(in aPerformanceTypeID int, in aLanguageID int
 	end;
 /
 
-create procedure insertPerformanceTiming(in aPerformanceID int, in aDate date, in aDuration int, in aTime time)
+create procedure insertPerformanceTiming(in aPerformanceID int, in aDate date, in aDuration time, in aTime time)
 	begin
 		insert into PerformanceTiming(performanceID, date, durationInMinutes, time) values (aPerformanceID, aDate, aDuration, aTime);
 	end;
 /
 
-create procedure insertTicket(in aSeatLocation varchar(6), in aUserID int, in aPerformanceTimingID int, in aTicketPrice decimal(5, 2))
+
+
+-- procedure to log user in to account based on valid pswrd and usrnm
+create procedure login(in aUName varchar(50), in aPassword varchar(50))
 	begin
-		insert into Ticket(seatLocation, userID, performanceTimingID, ticketPrice) values (aSeatLocation, aUserID, aPerformanceTimingID, aTicketPrice);
-	end;
+		if exists(select ID from User where userName = aUName and password = aPassword) 
+        then 
+			select true;
+        else select false;
+		end if;
+    end;
 /
-
-
-
 
 -- select information about performances on a specific date
 create procedure getPerformanceOnDate(in aDate date)
 	begin
-		select title, description from Performance, Language, PeformanceTiming where date = aDate;
+		select title, description, hasLiveMusic, noOfSeatsAvailable, Language.languageOption from Performance, Language, PeformanceTiming where date = aDate;
 	end;
 
 /
 
--- returns performances that have the search word in the description or title
-create procedure searchForPerformances(in searchWord varchar(100))
-	begin
-		select title, description from Performance where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%");
-	end;
-/
 
 
 delimiter ;
 
--- added all of the call methods for the procedures
-
-Call insertUser('Nathan_Drake', 'Fortune$$001', '1985-08-23', '123 Grove Lane');
-Call insertUser('A_Sandler', 'W@terB0y473', '1965-02-04', '78 Stone Road');
-Call insertUser('FunnyGuyKev', 'ImNotFunny:(', '1977-04-13', '11 Crocket Road');
-Call insertUser('JimmyJ', 'Passwor123', '2003-12-24', '8 Albion Road');
-Call insertUser('MarkZ', 'meT@verSe1823', '2009-03-27', '92 Hopework Drive');
+Call insertUser('nathandrake@gmail.com', 'Fortune$$001', '1985-08-23', '123 Grove Lane');
+Call insertUser('asandler@hotmail.com', 'W@terB0y473', '1965-02-04', '78 Stone Road');
+Call insertUser('kevhart@yahoo.com', 'ImNotFunny:(', '1977-04-13', '11 Crocket Road');
+Call insertUser('johnnyb@gmail.com', 'Passwor123', '2003-12-24', '8 Albion Road');
+Call insertUser('Markz@hotmail.com', 'meT@verSe1823', '2009-03-27', '92 Hopework Drive');
 
 Call insertSeat('stalls', '20.00');
 Call insertSeat('circle', '20.00');
@@ -184,7 +179,6 @@ Call insertPerformance(4, 2, 'In the Solitude of Cotton Fields', 'In the Solitud
 Call insertPerformance(4, 1, 'The Women', 'The Women is a 1936 American play, a comedy of manners by Clare Boothe Luce. The cast includes women only.', false, 200); 
 Call insertPerformance(4, 1, 'Midsummer Night''s Dream', 'A Midsummer Night''s Dream is a comedy written by William Shakespeare c. 1595 or 1596. The play is set in Athens, and consists of several subplots that revolve around the marriage of Theseus and Hippolyta. One subplot involves a conflict among four Athenian lovers.', false, 200);
 Call insertPerformance(4, 2, 'Matsukaze', 'Matsukaze is a play of the third category, the woman''s mode, by Kan''ami, revised by Zeami Motokiyo. One of the most highly regarded of Noh plays, it is mentioned more than any other in Zeami''s own writings, and is depicted numerous times in the visual arts.',  false, 200);
-
 
 Call insertPerformanceTiming(1, '2022-11-11', '02:00', '13:00');
 Call insertPerformanceTiming(1, '2022-11-11', '02:00', '19:00');
