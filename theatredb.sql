@@ -49,7 +49,8 @@ create table Performance(
     	foreign key (languageID) references Language(languageID),
     	title varchar(100),
     	description varchar(1000),
-    	hasLiveMusic boolean
+    	hasLiveMusic boolean,
+	imageUrl varchar(10000)
 );
 
 create table PerformanceTiming(
@@ -91,9 +92,9 @@ create procedure insertLanguage(in aLanguageOption varchar(30))
     end;
 /
     
-create procedure insertPerformance(in aPerformanceTypeID int, in aLanguageID int, in aTitle varchar(100), in aDescription varchar(1000), in aHasLiveMusic boolean)
+create procedure insertPerformance(in aPerformanceTypeID int, in aLanguageID int, in aTitle varchar(100), in aDescription varchar(1000), in aHasLiveMusic boolean, in aImageUrl varchar(10000))
 	begin
-		insert into Performance(performanceTypeID, languageID, title, description, hasLiveMusic) values (aPerformanceTypeID, aLanguageID, aTitle, aDescription, aHasLiveMusic);
+		insert into Performance(performanceTypeID, languageID, title, description, hasLiveMusic, imageUrl) values (aPerformanceTypeID, aLanguageID, aTitle, aDescription, aHasLiveMusic, aImageUrl);
 	end;
 /
 
