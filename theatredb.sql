@@ -22,7 +22,7 @@ create table PerformanceType(
 create table Purchase(
 	purchaseID int primary key auto_increment,
     userID int,
-    foreign key (userID) references User(userID),
+    foreign key (userID) references User(userID) on delete cascade,
     quantity int
 );
 
@@ -33,7 +33,7 @@ create table Ticket(
     performanceTimingID int,
     ticketPrice decimal(5, 2),
     foreign key (userID) references User(userID),
-    foreign key (PurchaseID) references Purchase(purchaseID)
+    foreign key (PurchaseID) references Purchase(purchaseID) on delete cascade
 );
 
 create table Language(
