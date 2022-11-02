@@ -29,10 +29,8 @@ create table Purchase(
 create table Ticket(
     ticketID int primary key auto_increment,
     purchaseID int,
-    userID int,
     performanceTimingID int,
     ticketPrice decimal(5, 2),
-    foreign key (userID) references User(userID),
     foreign key (PurchaseID) references Purchase(purchaseID)
 );
 
