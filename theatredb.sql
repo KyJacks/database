@@ -113,14 +113,14 @@ create procedure insertSeatTypePrice
 create procedure searchForPerformances(in searchWord varchar(100), in aFromDate date, in aToDate date)
     begin
         if aFromDate = null and aToDate = null then
-            select title, description, dateTime, price, durationInMinutes from Performance join PerformanceTiming on 
+            select title, description, dateTime, durationInMinutes from Performance join PerformanceTiming on 
                 PerformanceTiming.performanceID = Performance.performanceID where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%");
         elseif aToDate = null then
-            select title, description, dateTime, price, durationInMinutes from Performance join PerformanceTiming on 
+            select title, description, dateTime, durationInMinutes from Performance join PerformanceTiming on 
                 PerformanceTiming.performanceID = Performance.performanceID where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%")
                 and dateTime = aFromDate order by dateTime asc;
         else
-            select title, description, dateTime, price, durationInMinutes from Performance join PerformanceTiming on 
+            select title, description, dateTime, durationInMinutes from Performance join PerformanceTiming on 
                 PerformanceTiming.performanceID = Performance.performanceID where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%")
                 and dateTime between aFromDate and aToDate order by dateTime asc;
         end if;
