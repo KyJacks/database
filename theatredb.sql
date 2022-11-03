@@ -56,7 +56,7 @@ create table PerformanceTiming(
 	performanceTimingID INT PRIMARY KEY auto_increment,
 	performanceID INT,
 	dateTimeOfPerformance DATETIME,
-	durationInMinutes TIME,
+	duration TIME,
 	foreign key (performanceID) references performance(performanceID) on delete cascade
 );
 
@@ -105,7 +105,7 @@ create procedure insertPurchase(in aUserID int, in aQuantity int, out aPurchaseI
 
 create procedure insertPerformanceTiming(in aPerformanceID int, in aDateTimeOfPerformance datetime, in aDuration time)
 	begin
-		insert into PerformanceTiming(performanceID, dateTimeOfPerformance, durationInMinutes) values (aPerformanceID, aDateTimeOfPerformance, aDuration);
+		insert into PerformanceTiming(performanceID, dateTimeOfPerformance, duration) values (aPerformanceID, aDateTimeOfPerformance, aDuration);
 	end;
 /
 
@@ -139,18 +139,18 @@ create procedure getPerformanceTitle (in aPerformanceTimingID int)
 create procedure searchForPerformances(in searchWord varchar(100), in aFromDate date, in aToDate date)
 	begin
 		if aFromDate is null and aToDate is null then
-			select title, description, dateTimeOfPerformance, durationInMinutes, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
+			select title, description, dateTimeOfPerformance, duration, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
             join PerformanceTiming on PerformanceTiming.performanceID = Performance.performanceID
             join SeatTypePrice on SeatTypePrice.performanceTimingID = PerformanceTiming.performanceTimingID
                 where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%");
 		elseif aToDate is null then
-			select title, description, dateTimeOfPerformance, durationInMinutes, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
+			select title, description, dateTimeOfPerformance, duration, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
             join PerformanceTiming on PerformanceTiming.performanceID = Performance.performanceID
             join SeatTypePrice on SeatTypePrice.performanceTimingID = PerformanceTiming.performanceTimingID
 				where (description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%"))
 					and date(dateTimeOfPerformance) = aFromDate order by dateTimeOfPerformance asc;
 		else
-			select title, description, dateTimeOfPerformance, durationInMinutes, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
+			select title, description, dateTimeOfPerformance, duration, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
             join PerformanceTiming on PerformanceTiming.performanceID = Performance.performanceID
             join SeatTypePrice on SeatTypePrice.performanceTimingID = PerformanceTiming.performanceTimingID
 				where (description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%"))
