@@ -112,6 +112,7 @@ create procedure insertPerformanceTiming(in aPerformanceID int, in aDateTimeOfPe
 create procedure insertTicket(in aSeatLocation varchar(100), in aPerformanceTimingID int, in aTicketPrice decimal(5, 2), in aPurchaseID int)
 	begin
 		insert into Ticket(seatLocation, performanceTimingID, ticketPrice, purchaseID) values (aSeatLocation, aPerformanceTimingID, aTicketPrice, aPurchaseID);
+		update SeatTypePrice set seatAmount = seatAmount - 1 where seatType = aSeatLocation and performanceTimingID = aPerformanceTimingID;
 	end;
 /
 
