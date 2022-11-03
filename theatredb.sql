@@ -40,7 +40,7 @@ create table Language(
 );
 
 create table Performance(
-	performanceID int primary key auto_increment,
+	    performanceID int primary key auto_increment,
     	performanceTypeID INT,
      	languageID int,
     	foreign key (performanceTypeID) references PerformanceType(performanceTypeID),
@@ -48,23 +48,24 @@ create table Performance(
     	title varchar(100),
     	description varchar(1000),
     	hasLiveMusic boolean,
-	imageUrl varchar(10000)
-	constraint urlCheck check (imageUrl like '%http_%')
+	    imageUrl varchar(10000)
+	    constraint urlCheck check (imageUrl like '%http_%')
 );
 
 create table PerformanceTiming(
 	performanceTimingID INT PRIMARY KEY auto_increment,
 	performanceID INT,
 	dateTimeOfPerformance DATETIME,
-	durationInMinutes TIME,
-	foreign key (performanceID) references performance(performanceID)
+	duration TIME,
+	foreign key (performanceID) references performance(performanceID) on delete cascade
+
 );
 
 create table SeatTypePrice(
     seatTypePriceID INT AUTO_INCREMENT primary key,
     performanceTimingID INT,
     seatType VARCHAR(100),
-	constraint seatType check (seatType in ('stalls', 'circle')),
+	  constraint seatType check (seatType in ('stalls', 'circle')),
     seatAmount INT,
     seatPrice decimal(5,2),
     foreign key (performanceTimingID) references PerformanceTiming(performanceTimingID)
@@ -99,9 +100,18 @@ create procedure insertPerformance(in aPerformanceTypeID int, in aLanguageID int
 
 create procedure insertPerformanceTiming(in aPerformanceID int, in aDateTimeOfPerformance datetime, in aDuration time)
 	begin
-		insert into PerformanceTiming(performanceID, dateTimeOfPerformance, durationInMinutes) values (aPerformanceID, aDateTimeOfPerformance, aDuration);
+		insert into PerformanceTiming(performanceID, dateTimeOfPerformance, duration) values (aPerformanceID, aDateTimeOfPerformance, aDuration);
 	end;
 /
+
+
+create procedure insertTicket(in aSeatLocation varchar(100), in aPerformanceTimingID int, in aTicketPrice decimal(5, 2), in aPurchaseID int)
+	begin
+		insert into Ticket(seatLocation, performanceTimingID, ticketPrice, purchaseID) values (aSeatLocation, aPerformanceTimingID, aTicketPrice, aPurchaseID);
+		update SeatTypePrice set seatAmount = seatAmount - 1 where seatType = aSeatLocation and performanceTimingID = aPerformanceTimingID;
+	end;
+/
+
 
 create procedure insertSeatTypePrice
 				(in aPerformanceTimingID int, in aSeatType varchar(100), in aSeatAmount int, in aPrice decimal(5, 2))
@@ -113,18 +123,18 @@ create procedure insertSeatTypePrice
 create procedure searchForPerformances(in searchWord varchar(100), in aFromDate date, in aToDate date)
 	begin
 		if aFromDate is null and aToDate is null then
-			select title, description, dateTimeOfPerformance, durationInMinutes, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
+			select title, description, dateTimeOfPerformance, duration, seatType, seatPrice, PerformanceTiming.performanceTimingID, seatAmount from Performance 
             join PerformanceTiming on PerformanceTiming.performanceID = Performance.performanceID
             join SeatTypePrice on SeatTypePrice.performanceTimingID = PerformanceTiming.performanceTimingID
                 where description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%");
 		elseif aToDate is null then
-			select title, description, dateTimeOfPerformance, durationInMinutes, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
+			select title, description, dateTimeOfPerformance, duration, seatType, seatPrice, PerformanceTiming.performanceTimingID, seatAmount from Performance 
             join PerformanceTiming on PerformanceTiming.performanceID = Performance.performanceID
             join SeatTypePrice on SeatTypePrice.performanceTimingID = PerformanceTiming.performanceTimingID
 				where (description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%"))
 					and date(dateTimeOfPerformance) = aFromDate order by dateTimeOfPerformance asc;
 		else
-			select title, description, dateTimeOfPerformance, durationInMinutes, seatType, seatPrice, PerformanceTiming.performanceTimingID from Performance 
+			select title, description, dateTimeOfPerformance, duration, seatType, seatPrice, PerformanceTiming.performanceTimingID, seatAmount from Performance 
             join PerformanceTiming on PerformanceTiming.performanceID = Performance.performanceID
             join SeatTypePrice on SeatTypePrice.performanceTimingID = PerformanceTiming.performanceTimingID
 				where (description like concat("%", searchWord, "%") or title like concat("%", searchWord, "%"))
@@ -246,52 +256,73 @@ Call insertSeatTypePrice(3, 'stalls', 120, '50.00');
 Call insertSeatTypePrice(3, 'circle', 80, '60.00');
 
 Call insertSeatTypePrice(4, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(4, 'circle', 80, '50.00');
+Call insertSeatTypePrice(4, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(5, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(5, 'circle', 80, '50.00');
+Call insertSeatTypePrice(5, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(6, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(6, 'circle', 80, '50.00');
+Call insertSeatTypePrice(6, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(7, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(7, 'circle', 80, '50.00');
+Call insertSeatTypePrice(7, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(8, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(8, 'circle', 80, '50.00');
+Call insertSeatTypePrice(8, 'circle', 80, '75.00');
 
-Call insertSeatTypePrice(9, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(9, 'circle', 80, '50.00');
+Call insertSeatTypePrice(9, 'stalls', 120, '25.00');
+Call insertSeatTypePrice(9, 'circle', 80, '45.00');
 
 Call insertSeatTypePrice(10, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(10, 'circle', 80, '50.00');
+Call insertSeatTypePrice(10, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(11, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(11, 'circle', 80, '50.00');
+Call insertSeatTypePrice(11, 'circle', 80, '75.00');
 
-Call insertSeatTypePrice(12, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(12, 'stalls', 120, '35.00');
 Call insertSeatTypePrice(12, 'circle', 80, '50.00');
 
 Call insertSeatTypePrice(13, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(13, 'circle', 80, '50.00');
+Call insertSeatTypePrice(13, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(14, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(14, 'circle', 80, '50.00');
+Call insertSeatTypePrice(14, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(15, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(15, 'circle', 80, '50.00');
+Call insertSeatTypePrice(15, 'circle', 80, '60.00');
 
-Call insertSeatTypePrice(16, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(16, 'stalls', 120, '35.00');
 Call insertSeatTypePrice(16, 'circle', 80, '50.00');
 
-Call insertSeatTypePrice(17, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(17, 'circle', 80, '50.00');
+Call insertSeatTypePrice(17, 'stalls', 120, '30.00');
+Call insertSeatTypePrice(17, 'circle', 80, '55.00');
 
 Call insertSeatTypePrice(18, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(18, 'circle', 80, '50.00');
+Call insertSeatTypePrice(18, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(19, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(19, 'circle', 80, '50.00');
+Call insertSeatTypePrice(19, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(20, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(20, 'circle', 80, '50.00');
+Call insertSeatTypePrice(20, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(21, 'stalls', 120, '35.00');
+Call insertSeatTypePrice(21, 'circle', 80, '65.00');
+
+Call insertSeatTypePrice(22, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(22, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(23, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(23, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(24, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(24, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(25, 'stalls', 120, '40.00');
+Call insertSeatTypePrice(25, 'circle', 80, '55.00');
+
+Call insertSeatTypePrice(26, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(26, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(27, 'stalls', 120, '30.00');
+Call insertSeatTypePrice(27, 'circle', 80, '55.00');
