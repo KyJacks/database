@@ -36,7 +36,8 @@ create table Ticket(
 
 create table Language(
 	languageID INT PRIMARY KEY auto_increment,
-	languageOption VARCHAR(30)
+	languageOption VARCHAR(30),
+	constraint langOptCheck check (LanguageOption in ('English', 'Multiple Languages', 'No language'))
 );
 
 create table Performance(
