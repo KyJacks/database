@@ -4,11 +4,13 @@ use TheatreRoyal;
 
 
 create table User (
-	emailAddress VARCHAR(50) primary key NOT NULL,
+	userID INT PRIMARY KEY auto_increment,
+	emailAddress VARCHAR(50) NOT NULL,
 	password VARCHAR(50) NOT NULL,
 	DOB date not null,
 	homeAddress varchar(100) not null,
-    	constraint emailconst check (emailAddress like '%_@__%.__%')
+    constraint emailconst check (emailAddress like '%_@__%.__%')
+    -- constraint will be added for password based on client requirements
 );
 
 create table PerformanceType(
@@ -19,37 +21,35 @@ create table PerformanceType(
 
 create table Purchase(
 	purchaseID int primary key auto_increment,
-    	emailAddress VARCHAR(50),
-    	quantity int,
-	foreign key (emailAddress) references User(emailAddress)
+    userID int,
+    foreign key (userID) references User(userID),
+    quantity int
 );
 
 create table Ticket(
-    	ticketID int primary key auto_increment,
-    	purchaseID int,
-    	seatType varchar(100), 
-    	performanceTimingID int,
-    	ticketPrice decimal(5, 2),
-    	foreign key (PurchaseID) references Purchase(purchaseID),
-    	constraint seatType check (seatType in ('stalls', 'circle'))
+    ticketID int primary key auto_increment,
+    purchaseID int,
+    performanceTimingID int,
+    ticketPrice decimal(5, 2),
+    foreign key (PurchaseID) references Purchase(purchaseID)
 );
 
 create table Language(
 	languageID INT PRIMARY KEY auto_increment,
-	languageOption VARCHAR(30),
-	constraint langOptCheck check (LanguageOption in ('English', 'Multiple Languages', 'No language'))
+	languageOption VARCHAR(30)
 );
 
 create table Performance(
 	performanceID int primary key auto_increment,
     	performanceTypeID INT,
      	languageID int,
+    	foreign key (performanceTypeID) references PerformanceType(performanceTypeID),
+    	foreign key (languageID) references Language(languageID),
     	title varchar(100),
     	description varchar(1000),
     	hasLiveMusic boolean,
-	imageUrl varchar(10000),
-	foreign key (performanceTypeID) references PerformanceType(performanceTypeID),
-    	foreign key (languageID) references Language(languageID)
+	imageUrl varchar(10000)
+	constraint urlCheck check (imageUrl like '%http_%')
 );
 
 create table PerformanceTiming(
@@ -57,16 +57,17 @@ create table PerformanceTiming(
 	performanceID INT,
 	dateTimeOfPerformance DATETIME,
 	durationInMinutes TIME,
-	foreign key (performanceID) references performance(performanceID) on delete cascade
+	foreign key (performanceID) references performance(performanceID)
 );
 
 create table SeatTypePrice(
-    	seatTypePriceID INT AUTO_INCREMENT primary key,
-    	performanceTimingID INT,
-    	seatType VARCHAR(100),
-    	seatAmount INT,
-    	seatPrice decimal(5,2),
-    	foreign key (performanceTimingID) references PerformanceTiming(performanceTimingID)
+    seatTypePriceID INT AUTO_INCREMENT primary key,
+    performanceTimingID INT,
+    seatType VARCHAR(100),
+	constraint seatType check (seatType in ('stalls', 'circle')),
+    seatAmount INT,
+    seatPrice decimal(5,2),
+    foreign key (performanceTimingID) references PerformanceTiming(performanceTimingID)
 );
 
 -- procedures for inserting data into tables
@@ -96,22 +97,9 @@ create procedure insertPerformance(in aPerformanceTypeID int, in aLanguageID int
 	end;
 /
 
-create procedure insertPurchase(in aUserID int, in aQuantity int, out aPurchaseID int)
-	begin
-		insert into Purchase(userID, quantity) values (aUserID, aQuantity);
-        	set aPurchaseID = last_insert_id();
-	end;
-/
-
 create procedure insertPerformanceTiming(in aPerformanceID int, in aDateTimeOfPerformance datetime, in aDuration time)
 	begin
 		insert into PerformanceTiming(performanceID, dateTimeOfPerformance, durationInMinutes) values (aPerformanceID, aDateTimeOfPerformance, aDuration);
-	end;
-/
-
-create procedure insertTicket(in aSeatLocation varchar(100), in aPerformanceTimingID int, in aTicketPrice decimal(5, 2), in aPurchaseID int)
-	begin
-		insert into Ticket(seatLocation, performanceTimingID, ticketPrice, purchaseID) values (aSeatLocation, aPerformanceTimingID, aTicketPrice, aPurchaseID);
 	end;
 /
 
@@ -120,19 +108,6 @@ create procedure insertSeatTypePrice
 	begin 
 		insert into SeatTypePrice(performanceTimingID, seatType, seatAmount, seatPrice) values (aPerformanceTimingID, aSeatType, aSeatAmount, aPrice);
 	end;
-/
-
-
-
--- more complex procedures
-
-
-create procedure getPerformanceTitle (in aPerformanceTimingID int)
-		begin
-			select distinct title from Performance join PerformanceTiming on Performance.performanceID = PerformanceTiming.performanceID 
-				where performanceTimingID = aPerformanceTimingID;
-        end;
-
 /
 
 create procedure searchForPerformances(in searchWord varchar(100), in aFromDate date, in aToDate date)
@@ -158,18 +133,37 @@ create procedure searchForPerformances(in searchWord varchar(100), in aFromDate 
     end;
 /
 
-create procedure checkAvailableSeats(in aSeatLocation varchar(6), in aPerformanceTimingID int, in quantity int, out isValid boolean)
-	begin
-		declare seatsRemaining int;
-		select seatAmount into seatsRemaining from SeatTypePrice where seatType = aSeatLocation and performanceTimingID = aPerformanceTimingID;
-        if seatsRemaining >= quantity then
-			set isValid = true;
-		else
-			set isValid = false;
-		end if;
-	end;
+create procedure getPerformanceTitle (in aPerformanceTimingID int)
+		begin
+			select title from Performance join PerformanceTiming on Performance.performanceID = PerformanceTiming.performanceID 
+				where performanceTimingID = aPerformanceTimingID distinct;
+        end;
 /
 
+/* create procedure buyTickets(in aSeatLocation varchar(6), in aUserID int, in aPerformanceTimingID int, in aTicketPrice int, in aMaxNumberOfSeats int, in quantity int)
+    begin
+        declare ticketsSold, seatsRemaining int;
+        declare errorMsg varchar(100);
+        select seatAmount into seatsRemaining from SeatTypePrice where seatType = aSeatLocation;
+        set seatsRemainingAfterPurchase = seatsRemaining - quantity;
+        -- raise an exception if customer tries to but more tickets than are available.
+        -- dont sell any at all if they want to buy more than is available.
+        if ticketsRemaining >= quantity then
+            call insertPurchase();
+        else
+            signal sqlstate "45000" set message_text = concat(ticketsRemaining, " tickets remaining. Unable to complete purchase.");
+            addToTickets: loop
+                if quantity = 0 then
+                    leave addToTickets;
+                end if;
+                call insertTicket(aSeatLocation, aUserID, aPerformanceTimingID, aTicketPrice);
+                set quantity = quantity - 1;
+            end loop addToTickets;
+        end if;
+    end;
+    
+    */
+/
 delimiter ;
 
 Call insertUser('nathandrake@gmail.com', 'Fortune$$001', '1985-08-23', '123 Grove Lane');
@@ -187,7 +181,7 @@ Call insertLanguage('English');
 Call insertLanguage('Multiple languages');
 Call insertLanguage('No language');
 
-Call insertPerformance(1, 1,'The Lion King','The live action retelling of the classic Disney movie',false,'https://lumiere-a.akamaihd.net/v1/images/image_fc5cb742.jpeg?region=0,0,540,810');
+Call insertPerformance(1, 1,'The Lion King','The live action retelling of the classic disney moive',false,'https://lumiere-a.akamaihd.net/v1/images/image_fc5cb742.jpeg?region=0,0,540,810');
 Call insertPerformance(1, 1, 'Elvis', 'Whilst on a mission to transform the mainstream rock and roll culture of the USA, singer Elvis Presley uses his fame to highlight racism within the country.', false,'https://m.media-amazon.com/images/M/MV5BYzMzNTJjYmMtZTkxNS00MjI4LWI3YmQtOTQ4MDZjZDJlZjQyXkEyXkFqcGdeQXVyNjc0NzQzNTM@._V1_.jpg');
 Call insertPerformance(1, 1, 'The Wizard of Oz', 'The Wizard of Oz is a 2011 musical based on the 1939 film of the same name in turn based on L Frank Baum’s novel The Wonderful Wizard of Oz, with a book adapted by Andrew Lloyd Webber and Jeremy Sams.', false,'https://flxt.tmsimg.com/assets/p5095_p_v12_an.jpg');
 Call insertPerformance(1, 1, 'Oliver!', 'Oliver! is a coming-of-age stage musical, with book, music and lyrics by Lionel Bart. The musical is based upon the 1838 novel Oliver Twist by Charles Dickens. It premiered at the Wimbledon Theatre, southwest London in 1960 before opening in the West End, where it enjoyed a record-breaking long run.', false,'https://m.media-amazon.com/images/M/MV5BNWQwNTE4NWQtZDg0MC00ZDhkLWIzMzQtNDU1MDIxZTNmM2M3XkEyXkFqcGdeQXVyNjE5MjUyOTM@._V1_.jpg');
@@ -200,9 +194,9 @@ Call insertPerformance(2, 2, 'La bohème', 'La bohème is an opera in four acts,
 Call insertPerformance(2, 2, 'L''Orfeo', 'L''Orfeo, sometimes called La favola d''Orfeo, is a late Renaissance/early Baroque favola in musica, or opera, by Claudio Monteverdi, with a libretto by Alessandro Striggio.', false,'http://archive.simonkeenlyside.info/wp-content/uploads/2010/02/Orfeo_DVD.jpg');
 
 Call insertPerformance(3, 1, 'Coldplay', 'Coldplay are a British rock band formed in London in 1996. They consist of vocalist and pianist Chris Martin, guitarist Jonny Buckland, bassist Guy Berryman, drummer Will Champion and creative director Phil Harvey.', true, 'https://www.artelino.com/auctionimages/items/15480g1.jpg');
-Call insertPerformance(3, 1, 'Arctic Monkeys', 'Arctic Monkeys are an English rock band formed in Sheffield in 2002. The group consists of Alex Turner, Jamie Cook, Nick O''Malley, and Matt Helders.', true, 'https://www.defining.co/wp-content/uploads/2022/09/ScreenShot2020-12-16at10.47.21AM_ad3a1a7e-bc1a-40ef-bb3b-1d68efcaf6d1.png');
+Call insertPerformance(3, 1, 'Arctic Monkeys', 'Arctic Monkeys are an English rock band formed in Sheffield in 2002. The group consists of Alex Turner, Jamie Cook, Nick O''Malley, and Matt Helders.', true, 'https://www.defining.co/wp-content/uploads/2022/09/ScreenShot2020-12-16at10.47.21AM_ad3a1a7e-bc1a-40ef-bb3b-1d68efcaf6d1.png);
 Call insertPerformance(3, 2, 'Stromae', 'Paul Van Haver, better known by his stage name Stromae, is a Belgian singer, rapper, songwriter and producer. He is mostly known for his works in the genre of the hip hop and electronic music.', true, 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/6cf1ec7f-3236-4b9f-bc84-bc2c6e13392d/d7gwyb3-468a7eb7-7a0e-4cf8-b250-89f916d652ea.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzZjZjFlYzdmLTMyMzYtNGI5Zi1iYzg0LWJjMmM2ZTEzMzkyZFwvZDdnd3liMy00NjhhN2ViNy03YTBlLTRjZjgtYjI1MC04OWY5MTZkNjUyZWEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.6-SUMu7DJKS0xzS4ervH0IzPZAavNuV7PvpZy_w9Xeg');
-Call insertPerformance(3, 2, 'Bad Bunny', 'Bad Bunny, is a Puerto Rican rapper and singer. His music is defined as Latin trap and reggaeton. He rose to popularity in 2016 with his song "Diles".', true, 'https://toppng.com/uploads/preview/bad-bunny-11563057304ffa9k87zf6.png');
+Call insertPerformance(3, 2, 'Bad Bunny', 'Bad Bunny, is a Puerto Rican rapper and singer. His music is defined as Latin trap and reggaeton. He rose to popularity in 2016 with his song "Diles".', true, 'https://toppng.com/uploads/preview/bad-bunny-11563057304ffa9k87zf6.png);
 Call insertPerformance(3, 1, 'Stormzy', 'Stormzy, is a British rapper, singer and songwriter. In 2014, he gained attention on the UK underground music scene through his Wicked Skengman series of freestyles over classic grime beats.', true, 'https://www.defining.co/wp-content/uploads/2022/09/Stormzy_UKStreets_Poster.png');
 
 Call insertPerformance(4, 1, 'Romeo and Juliet', 'Romeo and Juliet is a tragedy written by William Shakespeare early in his career about two young Italian star-crossed lovers whose deaths ultimately reconcile their feuding families.', true, 'https://kbimages1-a.akamaihd.net/ca07820a-192c-4ec8-a3a6-684a3a7ee2e3/353/569/90/False/romeo-and-juliet-320.jpg');
