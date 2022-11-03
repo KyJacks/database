@@ -132,6 +132,13 @@ create procedure searchForPerformances(in searchWord varchar(100), in aFromDate 
     end;
 /
 
+create procedure getPerformanceTitle (in aPerformanceTimingID int)
+		begin
+			select title from Performance join PerformanceTiming on Performance.performanceID = PerformanceTiming.performanceID 
+				where performanceTimingID = aPerformanceTimingID distinct;
+        end;
+/
+
 /* create procedure buyTickets(in aSeatLocation varchar(6), in aUserID int, in aPerformanceTimingID int, in aTicketPrice int, in aMaxNumberOfSeats int, in quantity int)
     begin
         declare ticketsSold, seatsRemaining int;
