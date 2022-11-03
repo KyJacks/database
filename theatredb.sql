@@ -253,52 +253,73 @@ Call insertSeatTypePrice(3, 'stalls', 120, '50.00');
 Call insertSeatTypePrice(3, 'circle', 80, '60.00');
 
 Call insertSeatTypePrice(4, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(4, 'circle', 80, '50.00');
+Call insertSeatTypePrice(4, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(5, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(5, 'circle', 80, '50.00');
+Call insertSeatTypePrice(5, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(6, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(6, 'circle', 80, '50.00');
+Call insertSeatTypePrice(6, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(7, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(7, 'circle', 80, '50.00');
+Call insertSeatTypePrice(7, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(8, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(8, 'circle', 80, '50.00');
+Call insertSeatTypePrice(8, 'circle', 80, '75.00');
 
-Call insertSeatTypePrice(9, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(9, 'circle', 80, '50.00');
+Call insertSeatTypePrice(9, 'stalls', 120, '25.00');
+Call insertSeatTypePrice(9, 'circle', 80, '45.00');
 
 Call insertSeatTypePrice(10, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(10, 'circle', 80, '50.00');
+Call insertSeatTypePrice(10, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(11, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(11, 'circle', 80, '50.00');
+Call insertSeatTypePrice(11, 'circle', 80, '75.00');
 
-Call insertSeatTypePrice(12, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(12, 'stalls', 120, '35.00');
 Call insertSeatTypePrice(12, 'circle', 80, '50.00');
 
 Call insertSeatTypePrice(13, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(13, 'circle', 80, '50.00');
+Call insertSeatTypePrice(13, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(14, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(14, 'circle', 80, '50.00');
+Call insertSeatTypePrice(14, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(15, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(15, 'circle', 80, '50.00');
+Call insertSeatTypePrice(15, 'circle', 80, '60.00');
 
-Call insertSeatTypePrice(16, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(16, 'stalls', 120, '35.00');
 Call insertSeatTypePrice(16, 'circle', 80, '50.00');
 
-Call insertSeatTypePrice(17, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(17, 'circle', 80, '50.00');
+Call insertSeatTypePrice(17, 'stalls', 120, '30.00');
+Call insertSeatTypePrice(17, 'circle', 80, '55.00');
 
 Call insertSeatTypePrice(18, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(18, 'circle', 80, '50.00');
+Call insertSeatTypePrice(18, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(19, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(19, 'circle', 80, '50.00');
+Call insertSeatTypePrice(19, 'circle', 80, '75.00');
 
 Call insertSeatTypePrice(20, 'stalls', 120, '50.00');
-Call insertSeatTypePrice(20, 'circle', 80, '50.00');
+Call insertSeatTypePrice(20, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(21, 'stalls', 120, '35.00');
+Call insertSeatTypePrice(21, 'circle', 80, '65.00');
+
+Call insertSeatTypePrice(22, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(22, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(23, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(23, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(24, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(24, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(25, 'stalls', 120, '40.00');
+Call insertSeatTypePrice(25, 'circle', 80, '55.00');
+
+Call insertSeatTypePrice(26, 'stalls', 120, '50.00');
+Call insertSeatTypePrice(26, 'circle', 80, '75.00');
+
+Call insertSeatTypePrice(27, 'stalls', 120, '30.00');
+Call insertSeatTypePrice(27, 'circle', 80, '55.00');
